@@ -1,0 +1,19 @@
+{
+  "name": "jia-extracted-portal",
+  "version": "1.0.0",
+  "description": "Extracted and reconstructed Jia Partner Web Portal frontend replica with Mapbox and Firebase integration analysis",
+  "main": "server.mjs",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "keywords": [
+    "reverse-engineering",
+    "mapbox",
+    "react",
+    "firebase",
+    "jia"
+  ],
+  "author": "bigwoon",
+  "license": "UNLICENSED"
+}
