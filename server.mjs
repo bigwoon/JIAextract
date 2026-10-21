@@ -1,64 +1,12 @@
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const baseDir = path.join(path.dirname(fileURLToPath(import.meta.url)), 'public');
-const jsDir = path.join(baseDir, 'static', 'js');
-const cssDir = path.join(baseDir, 'static', 'css');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const baseDir = __dirname;
+const PORT = process.env.PORT || 3030;
 
-fs.mkdirSync(jsDir, { recursive: true });
-fs.mkdirSync(cssDir, { recursive: true });
-
-// Copy JS bundle
-const srcJs = 'C:/Users/User/.gemini/antigravity-ide/brain/41e07e72-0908-4893-bae8-39ddf1d9187b/scratch/jia-app/main.07a82f92.js';
-const dstJs = path.join(jsDir, 'main.07a82f92.js');
-if (fs.existsSync(srcJs) && !fs.existsSync(dstJs)) {
-  fs.copyFileSync(srcJs, dstJs);
-  console.log('Copied main.07a82f92.js to', dstJs);
-}
-
-// Download CSS if missing
-const dstCss = path.join(cssDir, 'main.e699ab20.css');
-if (!fs.existsSync(dstCss)) {
-  console.log('Fetching CSS...');
-  const res = await fetch('https://app.jia-technologies.com/static/css/main.e699ab20.css');
-  const css = await res.text();
-  fs.writeFileSync(dstCss, css, 'utf8');
-  console.log('Saved CSS (' + css.length + ' bytes)');
-}
-
-// Write index.html
-const indexHtmlPath = path.join(baseDir, 'index.html');
-const indexHtmlContent = `<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Jia Partner Web Portal (Localhost Replica)</title>
-  <link href="https://fonts.googleapis.com/css?family=Red+Hat+Text:400,500,700&display=swap&subset=latin-ext" rel="stylesheet">
-  <script defer="defer" src="https://kit.fontawesome.com/f2e7750c39.js" crossorigin="anonymous"></script>
-  <script>
-    HTMLCanvasElement.prototype.getContext = function(t) {
-      return function(e, n) {
-        n = n || {};
-        n.preserveDrawingBuffer = true;
-        return t.call(this, e, n);
-      };
-    }(HTMLCanvasElement.prototype.getContext);
-  </script>
-  <script defer="defer" src="/static/js/main.07a82f92.js"></script>
-  <link href="/static/css/main.e699ab20.css" rel="stylesheet">
-</head>
-<body>
-  <noscript>You need to enable JavaScript to run this app.</noscript>
-  <div id="root"></div>
-</body>
-</html>`;
-fs.writeFileSync(indexHtmlPath, indexHtmlContent, 'utf8');
-console.log('index.html ready at', indexHtmlPath);
-
-// Create HTTP Server with SPA fallback
-const PORT = 3030;
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'application/javascript; charset=utf-8',
@@ -75,12 +23,9 @@ const MIME_TYPES = {
 
 const server = http.createServer((req, res) => {
   let reqPath = req.url.split('?')[0];
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-
-  // Normalize path
   let filePath = path.join(baseDir, reqPath === '/' ? 'index.html' : reqPath);
 
-  // If path doesn't exist or is a directory, fallback to index.html for SPA routing
+  // Fallback to index.html for SPA routing
   if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
     filePath = path.join(baseDir, 'index.html');
   }
@@ -102,9 +47,7 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(PORT, '127.0.0.1', () => {
-  console.log(`====================================================`);
-  console.log(`🚀 Jia Localhost App is running at http://127.0.0.1:${PORT}`);
-  console.log(`   Map View: http://127.0.0.1:${PORT}/map`);
-  console.log(`====================================================`);
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Jia Extracted Portal running at http://localhost:${PORT}`);
+  console.log(`🗺️ Map View: http://localhost:${PORT}/map`);
 });
