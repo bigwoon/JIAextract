@@ -5,11 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Jia Partner Web Portal</title>
   <script>
-    // Automatically set base path if hosted on GitHub Pages subpath
-    if (window.location.pathname.startsWith('/JIAextract') && !document.querySelector('base')) {
-      const base = document.createElement('base');
-      base.href = '/JIAextract/';
-      document.head.appendChild(base);
+    // Ensure trailing slash on /JIAextract to prevent router mismatch
+    if (window.location.pathname === '/JIAextract') {
+      window.location.replace('/JIAextract/');
     }
   </script>
   <link href="https://fonts.googleapis.com/css?family=Red+Hat+Text:400,500,700&display=swap&subset=latin-ext" rel="stylesheet">
@@ -23,8 +21,8 @@
       };
     }(HTMLCanvasElement.prototype.getContext);
   </script>
-  <script defer="defer" src="./static/js/main.07a82f92.js"></script>
-  <link href="./static/css/main.e699ab20.css" rel="stylesheet">
+  <script defer="defer" src="./static/js/main.07a82f92.js?v=3"></script>
+  <link href="./static/css/main.e699ab20.css?v=3" rel="stylesheet">
 </head>
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
