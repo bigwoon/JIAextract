@@ -5,10 +5,31 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Jia Partner Web Portal</title>
   <script>
-    // Ensure trailing slash on /JIAextract to prevent router mismatch
+    // 1. Ensure trailing slash on /JIAextract
     if (window.location.pathname === '/JIAextract') {
       window.location.replace('/JIAextract/');
     }
+
+    // 2. Intercept window.location.assign and replace to prevent jumping to root domain
+    (function() {
+      const prefix = '/JIAextract';
+      const origAssign = window.location.assign.bind(window.location);
+      const origReplace = window.location.replace.bind(window.location);
+
+      window.location.assign = function(url) {
+        if (typeof url === 'string' && url.startsWith('/') && !url.startsWith(prefix)) {
+          url = prefix + url;
+        }
+        return origAssign(url);
+      };
+
+      window.location.replace = function(url) {
+        if (typeof url === 'string' && url.startsWith('/') && !url.startsWith(prefix)) {
+          url = prefix + url;
+        }
+        return origReplace(url);
+      };
+    })();
   </script>
   <link href="https://fonts.googleapis.com/css?family=Red+Hat+Text:400,500,700&display=swap&subset=latin-ext" rel="stylesheet">
   <script defer="defer" src="https://kit.fontawesome.com/f2e7750c39.js" crossorigin="anonymous"></script>
@@ -21,8 +42,8 @@
       };
     }(HTMLCanvasElement.prototype.getContext);
   </script>
-  <script defer="defer" src="./static/js/main.07a82f92.js?v=3"></script>
-  <link href="./static/css/main.e699ab20.css?v=3" rel="stylesheet">
+  <script defer="defer" src="./static/js/main.07a82f92.js?v=4"></script>
+  <link href="./static/css/main.e699ab20.css?v=4" rel="stylesheet">
 </head>
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
